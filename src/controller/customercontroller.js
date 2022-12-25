@@ -12,8 +12,6 @@ const createCustomer= async function(req,res){
         if(Object.keys(req.body).length==0){
             return res.status(400).send({status:false, message:"please provide your customer data in request body."})
         }
-        await customerModel.deleteMany()
-        
         if(!req.body.firstName){
             return res.status(400).send({status:false, message:"please provide firstName! It is required."})
         }
@@ -52,10 +50,9 @@ const createCustomer= async function(req,res){
         if(await customerModel.findOne({emailID:req.body.emailID, mobileNumber:req.body.mobileNumber})){
             return res.status(409).send({status:false, message:"customer already registered with us."})
         }
+    //.............................................. validation ends ..........................................................
+    //.............................................. UUID .....................................................................   
         req.body.customerID= crypto.randomBytes(16).toString('hex')
-
-        //.............................................. validation ends ..........................................................
-        
         
         return res.status(201).send({status:true, message:"Success", data: await customerModel.create(req.body)})
 
